@@ -1,5 +1,6 @@
-import LoginPage from '../../pages/LoginPage';
-import DashboardPage from '../../pages/DashboardPage';
+import LoginPage from '../../support/pageObjects/LoginPage';
+import DashboardPage from '../../support/pageObjects/DashboardPage';
+import loginData from '../../fixtures/loginData.json';
 
 describe('OrangeHRM Login Feature with intercept (POM)', () => {
   const loginPage = new LoginPage();
@@ -18,7 +19,7 @@ describe('OrangeHRM Login Feature with intercept (POM)', () => {
     dashboardPage.interceptDashboardAPIs();
 
     // Perform login
-    loginPage.loginAndWait('Admin', 'admin123');
+    loginPage.loginAndWait(loginData.valid.username, loginData.valid.password);
 
     // Wait for all dashboard API calls
     dashboardPage.waitForDashboardAPIs();
@@ -33,7 +34,7 @@ describe('OrangeHRM Login Feature with intercept (POM)', () => {
     loginPage.interceptLoginRequest();
 
     // Perform login with invalid username
-    loginPage.loginAndWait('InvalidUser', 'admin123');
+    loginPage.loginAndWait(loginData.invalidUsername.username, loginData.invalidUsername.password);
 
     // Verify error message
     loginPage.verifyErrorMessage();
@@ -46,7 +47,7 @@ describe('OrangeHRM Login Feature with intercept (POM)', () => {
     loginPage.interceptLoginRequest();
 
     // Perform login with invalid password
-    loginPage.loginAndWait('Admin', 'wrongpassword');
+    loginPage.loginAndWait(loginData.invalidPassword.username, loginData.invalidPassword.password);
 
     // Verify error message
     loginPage.verifyErrorMessage();
@@ -59,7 +60,7 @@ describe('OrangeHRM Login Feature with intercept (POM)', () => {
     loginPage.interceptLoginRequest();
 
     // Perform login with invalid credentials
-    loginPage.loginAndWait('WrongUser', 'wrongpass123');
+    loginPage.loginAndWait(loginData.invalidBoth.username, loginData.invalidBoth.password);
 
     // Verify error message
     loginPage.verifyErrorMessage();
@@ -83,7 +84,7 @@ describe('OrangeHRM Login Feature with intercept (POM)', () => {
     loginPage.waitForPageImage();
 
     // Fill only password
-    loginPage.enterPassword('admin123');
+    loginPage.enterPassword(loginData.emptyUsername.password);
     loginPage.clickSubmit();
 
     // Verify required field message
@@ -96,7 +97,7 @@ describe('OrangeHRM Login Feature with intercept (POM)', () => {
     loginPage.waitForPageImage();
 
     // Fill only username
-    loginPage.enterUsername('Admin');
+    loginPage.enterUsername(loginData.emptyPassword.username);
     loginPage.clickSubmit();
 
     // Verify required field message
@@ -110,7 +111,7 @@ describe('OrangeHRM Login Feature with intercept (POM)', () => {
     loginPage.interceptLoginRequest();
 
     // Perform login with wrong case password
-    loginPage.loginAndWait('Admin', 'ADMIN123');
+    loginPage.loginAndWait(loginData.caseSensitivity.username, loginData.caseSensitivity.password);
 
     // Verify error message
     loginPage.verifyErrorMessage();
@@ -122,11 +123,11 @@ describe('OrangeHRM Login Feature with intercept (POM)', () => {
     loginPage.waitForPageImage();
 
     // Fill password field
-    loginPage.enterPassword('admin123');
+    loginPage.enterPassword(loginData.valid.password);
 
     // Verify password is hidden
     loginPage.verifyPasswordIsHidden();
-    loginPage.verifyPasswordValue('admin123');
+    loginPage.verifyPasswordValue(loginData.valid.password);
   });
 
   it('TC-010: Klik link Forgot your password', () => {
@@ -146,7 +147,7 @@ describe('OrangeHRM Login Feature with intercept (POM)', () => {
     loginPage.interceptLoginRequest();
 
     // Perform login with username containing leading space
-    loginPage.loginAndWait(' Admin', 'admin123');
+    loginPage.loginAndWait(loginData.leadingSpace.username, loginData.leadingSpace.password);
 
     // Verify error message
     loginPage.verifyErrorMessage();
